@@ -4,15 +4,71 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Spriha's HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
+    <h1>Spriha's Assignment 1!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+      <div class="section">
+
+      <figure>
+        <img src="Schematic Diagram.jpg" alt="Schematic Diagram" />
+        <figcaption>Figure 1: Schematic Diagram of three LEDs attached to three resistors to blink independtly.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="A0.jpg" alt="Breadboard circuit" />
+        <figcaption>Figure 2: Breadboard setup of my LEDs. The LEDs blink independently as programmed.</figcaption>
+      </figure>
+      
+      <figure>
+        <img src="A0.gif" alt="LED blinking animation" />
+        <figcaption>Animated demonstration of the LED circuit in action.</figcaption>
+      </figure>
+      
+      <div class="section">
+        <p>Arduino code used to control the LEDs:</p>
+        <pre><code>
+// the setup function runs once when you press reset or power the board
+// Define LED pins connected to digital pins 9, 5, 3
+int led1 = 9;  // LED 1 connected to pin 9
+int led2 = 5;  // LED 2 connected to pin 5
+int led3 = 3;  // LED 3 connected to pin 3
+
+void setup() {
+  // Set each LED pin as an OUTPUT
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(led1, HIGH); delay(200); digitalWrite(led1, LOW); delay(200);
+  digitalWrite(led2, HIGH); delay(500); digitalWrite(led2, LOW); delay(500);
+  digitalWrite(led3, HIGH); delay(300); digitalWrite(led3, LOW); delay(300);
+}
+        </code></pre>
+      </div>
+      <div class="section">
+        <h2>Questions & Answers</h2>
+      
+        <p><strong>1.  Draw a graph where the X axis is time and the Y axis is voltage across the LEDs. Draw a line for each of your 3 LEDs</strong><br>
+           I created square-wave graphs for each LED showing voltage vs. time. Each LED line rises to ~2V when on and drops to 0V when off, staggered according to the delays in the Arduino code.</p>
+
+          <img src="A0-Graph.jpg" alt="Voltage vs Time Graph for LEDs">
+        <p><strong>2. How many LEDs could you blink independently with your Arduino? How much current would that draw?</strong><br>
+           About 10 LEDs can blink independently on an Arduino without exceeding the recommended total current (20mA per LED, total ≤200mA). For 3 LEDs, the current draw is 43.5mA because each LED draws a 1.8v from the 5v, and each resistor has a 220ohm resistance.</p>
+      
+        <p><strong>3. How fast do you need to blink your LEDs until you no longer can tell that they are blinking?</strong><br>
+          Human eyes perceive flicker as continuous light above ~ 50 Hz. This means each on/off cycle should be less than = 20 ms. 
+          In Arduino code, this corresponds to a delay of about 10 ms per HIGH and 10 ms per LOW.</p>
+      
+        <p><strong>4. Did you use AI tools in completing this assignment?</strong><br>
+           I used ChatGPT for setting up my websight and IDE. I was having trouble with setting ym portfolio website and downloading the zip from the github. I had to restart multiple times. I gave it prompts like my 'template' and 'spriha.github.io' are not synced and then what should i do. < /p>
+      </div>
+
     </div>
   </body>
 </html>

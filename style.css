@@ -37,14 +37,15 @@ h2 {
 }
 
 .header {
-  display: flex;
-  gap: 1em;
-  margin-top: 1em;
+  display: block;      
+  gap: 0;              
 }
 
 .header img {
-  width: 50%;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;      
 }
 
 .grid {
@@ -52,6 +53,25 @@ h2 {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1em;
   margin-top: 2em;
+}
+
+.section figure {
+  margin: 0;
+  text-align: center; 
+}
+
+.section img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 10px; 
+  border-radius: 8px;
+}
+
+.section figcaption {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 5px;
 }
 
 .assignment a {
