@@ -21,7 +21,96 @@
         <img src="A2-HCDE439.gif" alt="LED blinking animation" />
         <figcaption>Animated demonstration of the LED circuit in action.</figcaption>
       </figure>
+      <div class = "section">
+        <p> Arduino code used to control the LEDs:</p>
+        <pre> <code> 
 
-    </div>
-  </body>
+const int buttonPin = 2;  
+const int redPin = 11;
+const int greenPin = 10;
+const int bluePin = 9;
+
+int brightness = 0;
+int fadeAmount = 5;
+// 0 = red, 1 = green, 2 = blue
+int color = 0;  
+int buttonState = 0;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // This reads whether the button is pressed or not and then stores it to 'buttonState'
+  buttonState = digitalRead(buttonPin);
+
+  // If the button is pressed, the led turns on 
+  if (buttonState == HIGH) {
+    // show the selected color with the current brightness
+    // red
+    if (color == 0) {               
+      analogWrite(redPin, brightness);
+      analogWrite(greenPin, 0);
+      analogWrite(bluePin, 0);
+    // green
+    } else if (color == 1) {        
+      analogWrite(redPin, 0);
+      analogWrite(greenPin, brightness);
+      analogWrite(bluePin, 0);
+    // blue
+    } else if (color == 2) {        
+      analogWrite(redPin, 0);
+      analogWrite(greenPin, 0);
+      analogWrite(bluePin, brightness);
+    }
+
+    // fade in or out
+    brightness += fadeAmount;
+
+    // when fully bright or fully off, reverse direction
+    if (brightness <= 0 || brightness >= 255) {
+      fadeAmount = -fadeAmount;
+
+      // when fading out is done (brightness == 0), move to next color
+      if (brightness <= 0) {
+        color++;
+        if (color > 2) color = 0;  // loop back to red after blue
+      }
+    }
+
+    delay(20);
+  } else {
+    // turn everything off if button is not pressed
+    analogWrite(redPin, 0);
+    analogWrite(greenPin, 0);
+    analogWrite(bluePin, 0);
+    brightness = 0;
+    fadeAmount = 5;
+    color = 0;
+  }
+}
+        </code></pre>
+      </div>
+      <div class = "section">
+        <h2> Questions & Answers </h2>
+
+        <p><strong>1.  Draw a graph where the X axis is time and the Y axis is voltage across the LEDs. Draw a line for each of your 3 LEDs</strong><br>
+          I created square-wave graphs for each LED showing voltage vs. time. Each LED line rises to ~2V when on and drops to 0V when off, staggered according to the delays in the Arduino code.</p>
+
+         <img src="A0-Graph.jpg" alt="Voltage vs Time Graph for LEDs">
+       <p><strong>2. Given your schematic, circuit, and firmware, assuming the only thing that draws current is your LEDs, how long would your circuit run if powered by a 1200 mAh battery?</strong><br>
+          LED current at 255 PWM, So I (current) = 20 mA x 0.5 = 10mA. (The average brightness in a fade cycle is 50%) So battery life is 1200 mAh / 10mA = 120 hours (5 days). </p>
+     
+       <p><strong>3. Measure and record the actual voltage across one of your LEDs when it's on. How does this compare to the theoretical forward voltage for your LED color?</strong><br>
+         When the LED shows the color red and it is fully on, the reading is about 2.0 or 2.2 V across the LED. Calculations:  </p>
+     
+       <p><strong>4. Did you use AI tools in completing this assignment?</strong><br>
+          I used ChatGPT for setting up my websight and IDE. I was having trouble with setting ym portfolio website and downloading the zip from the github. I had to restart multiple times. I gave it prompts like my 'template' and 'spriha.github.io' are not synced and then what should i do. < /p>
+     </div>
+
+   </div>
+ </body>
 </html>
