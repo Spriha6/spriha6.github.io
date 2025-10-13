@@ -17,6 +17,11 @@
           <p>Here is all the documentation for assignment 2!</p>
         </figure>
 
+        <figure>
+          <img src="A2-schematic .jpg" />
+          <figcaption>This is the schematic diagram of the circuit shown above.</figcaption></p>
+        </figure>
+
       <figure>
         <img src="A2-HCDE439.gif" alt="LED blinking animation" />
         <figcaption>Animated demonstration of the LED circuit in action.</figcaption>
@@ -45,23 +50,25 @@ void setup() {
 
 void loop() {
   // This reads whether the button is pressed or not and then stores it to 'buttonState'
-  buttonState = digitalRead(buttonPin);
+buttonState = digitalRead(buttonPin);
 
-  // If the button is pressed, the led turns on 
+// Run the main logic inside a for loop (loops once, so behavior stays the same)
+for (int i = 0; i < 1; i++) {
+
+  // If the button is pressed, the led turns on
   if (buttonState == HIGH) {
     // show the selected color with the current brightness
-    // red
-    if (color == 0) {               
+    if (color == 0) {           // red
       analogWrite(redPin, brightness);
       analogWrite(greenPin, 0);
       analogWrite(bluePin, 0);
-    // green
-    } else if (color == 1) {        
+    } 
+    else if (color == 1) {      // green
       analogWrite(redPin, 0);
       analogWrite(greenPin, brightness);
       analogWrite(bluePin, 0);
-    // blue
-    } else if (color == 2) {        
+    } 
+    else if (color == 2) {      // blue
       analogWrite(redPin, 0);
       analogWrite(greenPin, 0);
       analogWrite(bluePin, brightness);
@@ -82,8 +89,8 @@ void loop() {
     }
 
     delay(20);
-  } else {
-    // turn everything off if button is not pressed
+  } 
+  else { // turn everything off if button is not pressed
     analogWrite(redPin, 0);
     analogWrite(greenPin, 0);
     analogWrite(bluePin, 0);
@@ -91,21 +98,30 @@ void loop() {
     fadeAmount = 5;
     color = 0;
   }
-}
+} 
+
         </code></pre>
       </div>
       <div class = "section">
         <h2> Questions & Answers </h2>
 
-        <p><strong>1.  Draw a graph where the X axis is time and the Y axis is voltage across the LEDs. Draw a line for each of your 3 LEDs</strong><br>
-          I created square-wave graphs for each LED showing voltage vs. time. Each LED line rises to ~2V when on and drops to 0V when off, staggered according to the delays in the Arduino code.</p>
+        <p><strong>1.  Draw a chart where the X axis is time and the Y axis is voltage. Draw 3 lines representing the voltage across an LED with analogWrite(led, 64), analogWrite(led, 128), and analogWrite(led, 255). </strong><br>
+          Alongwrite method would mean there is no fading. Each graph is independent, showing how that particular PWM value behaves over time.</p>
 
-         <img src="A0-Graph.jpg" alt="Voltage vs Time Graph for LEDs">
+         <img src="A2-Q1.jpg" alt="Voltage vs Time Graph for an LED">
        <p><strong>2. Given your schematic, circuit, and firmware, assuming the only thing that draws current is your LEDs, how long would your circuit run if powered by a 1200 mAh battery?</strong><br>
           LED current at 255 PWM, So I (current) = 20 mA x 0.5 = 10mA. (The average brightness in a fade cycle is 50%) So battery life is 1200 mAh / 10mA = 120 hours (5 days). </p>
      
        <p><strong>3. Measure and record the actual voltage across one of your LEDs when it's on. How does this compare to the theoretical forward voltage for your LED color?</strong><br>
-         When the LED shows the color red and it is fully on, the reading is about 2.0 or 2.2 V across the LED. Calculations:  </p>
+         When the LED shows the color red and it is fully on, the reading is about 2.0 V across the LED. 
+         Calculations: 
+         Voltage Supply: 5.0 V
+         Measured V_LED: 2.0 V
+         Resistor: 220 ohm
+         
+         I = (5.0 - 2.0) / 220 = 3.0 / 220 = 13.6 mA 
+         The value 13.6 mA current value matches the theoretical forward voltage range: 1.8 - 2.2 V
+         The measured voltage falls within the expected range, confirming that the LED is operating as specified. </p>
      
        <p><strong>4. Did you use AI tools in completing this assignment?</strong><br>
           I used ChatGPT for setting up my websight and IDE. I was having trouble with setting ym portfolio website and downloading the zip from the github. I had to restart multiple times. I gave it prompts like my 'template' and 'spriha.github.io' are not synced and then what should i do. < /p>
