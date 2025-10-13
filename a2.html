@@ -75,7 +75,8 @@ buttonState = digitalRead(buttonPin);
 
       if (brightness <= 0 || brightness >= 255) {
         fadeAmount = -fadeAmount;
-
+        
+        // Move to next color after fading out completely
         if (brightness <= 0) {
           color++;
           if (color > 2) color = 0;
@@ -119,7 +120,7 @@ buttonState = digitalRead(buttonPin);
          The measured voltage falls within the expected range, confirming that the LED is operating as specified. </p>
      
        <p><strong>4. Did you use AI tools in completing this assignment?</strong><br>
-          I used ChatGPT for setting up my websight and IDE. I was having trouble with setting ym portfolio website and downloading the zip from the github. I had to restart multiple times. I gave it prompts like my 'template' and 'spriha.github.io' are not synced and then what should i do. < /p>
+          I used chat gpt to understand how to make the schematic diagram because i had confusions, i still am not sure about the diagram.</p>
      </div>
 
    </div>
