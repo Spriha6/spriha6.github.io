@@ -52,53 +52,48 @@ void loop() {
   // This reads whether the button is pressed or not and then stores it to 'buttonState'
 buttonState = digitalRead(buttonPin);
 
-// Run the main logic inside a for loop (loops once, so behavior stays the same)
-for (int i = 0; i < 1; i++) {
-
-  // If the button is pressed, the led turns on
-  if (buttonState == HIGH) {
-    // show the selected color with the current brightness
-    if (color == 0) {           // red
-      analogWrite(redPin, brightness);
-      analogWrite(greenPin, 0);
-      analogWrite(bluePin, 0);
-    } 
-    else if (color == 1) {      // green
-      analogWrite(redPin, 0);
-      analogWrite(greenPin, brightness);
-      analogWrite(bluePin, 0);
-    } 
-    else if (color == 2) {      // blue
-      analogWrite(redPin, 0);
-      analogWrite(greenPin, 0);
-      analogWrite(bluePin, brightness);
-    }
-
-    // fade in or out
-    brightness += fadeAmount;
-
-    // when fully bright or fully off, reverse direction
-    if (brightness <= 0 || brightness >= 255) {
-      fadeAmount = -fadeAmount;
-
-      // when fading out is done (brightness == 0), move to next color
-      if (brightness <= 0) {
-        color++;
-        if (color > 2) color = 0;  // loop back to red after blue
+// Simple for loop around the main logic
+  for (int i = 0; i < 1; i++) {
+    if (buttonState == HIGH) {
+      if (color == 0) {           // red
+        analogWrite(redPin, brightness);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, 0);
+      } 
+      else if (color == 1) {      // green
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, brightness);
+        analogWrite(bluePin, 0);
+      } 
+      else if (color == 2) {      // blue
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, brightness);
       }
-    }
 
-    delay(20);
-  } 
-  else { // turn everything off if button is not pressed
-    analogWrite(redPin, 0);
-    analogWrite(greenPin, 0);
-    analogWrite(bluePin, 0);
-    brightness = 0;
-    fadeAmount = 5;
-    color = 0;
+      brightness += fadeAmount;
+
+      if (brightness <= 0 || brightness >= 255) {
+        fadeAmount = -fadeAmount;
+
+        if (brightness <= 0) {
+          color++;
+          if (color > 2) color = 0;
+        }
+      }
+
+      delay(20);
+    } 
+    else { 
+      analogWrite(redPin, 0);
+      analogWrite(greenPin, 0);
+      analogWrite(bluePin, 0);
+      brightness = 0;
+      fadeAmount = 5;
+      color = 0;
+    }
   }
-} 
+
 
         </code></pre>
       </div>
