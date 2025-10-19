@@ -53,9 +53,7 @@
             void loop() {
               // Read thermistor value
               int sensorValue = analogRead(thermPin);
-            
-              // Convert to voltage (optional, for debugging)
-              float voltage = sensorValue * (5.0 / 1023.0);
+
             
               Serial.print("Sensor Value: ");
               Serial.print(sensorValue);
