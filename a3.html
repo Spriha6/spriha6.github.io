@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Spriha's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Spriha's Assignment 3!</h1>
+    <div class="header">
+      <div class="section">
+        
+      <figure>
+        <img src="A3-SCHEMATIC.jpg" alt="Schematic Diagram" />
+        <figcaption>Figure 1: Schematic Diagram of three LEDs attached to three resistors to blink independtly.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="A3-CIRCUIT.jpg" alt="Breadboard circuit" />
+        <figcaption>Figure 2: Breadboard setup of my LEDs. The LEDs blink independently as programmed.</figcaption>
+      </figure>
+      
+      <figure>
+        <img src="A3-GREEN DEMO.gif" alt="LED turning greenn as the thermister heats up because of the heat from the finger" />
+        <figcaption>Animated demonstration of the LED turning green.</figcaption>
+      </figure>
+      <figure>
+        <img src="A3-HAIR DRYER DEMO.gif" alt="LED turning red as the thermister heats up because of the heat from the hair dryer" />
+        <figcaption>Animated demonstration of the LED turning red as the thermister heats up because of the heat from the hair dryer.</figcaption>
+      </figure>
+      
+      <div class="section">
+        <p>Arduino code used to control the LEDs:</p>
+        <pre><code>
+            // RGB LED pins
+            const int redPin = 9;
+            const int greenPin = 10;
+            const int bluePin = 11;
+            
+            // Thermistor pin
+            const int thermPin = A0;
+            
+            void setup() {
+              Serial.begin(9600);                 
+              pinMode(redPin, OUTPUT);
+              pinMode(greenPin, OUTPUT);
+              pinMode(bluePin, OUTPUT);
+            }
+            
+            void loop() {
+              // Read thermistor value
+              int sensorValue = analogRead(thermPin);
+            
+              // Convert to voltage (optional, for debugging)
+              float voltage = sensorValue * (5.0 / 1023.0);
+            
+              Serial.print("Sensor Value: ");
+              Serial.print(sensorValue);
+              Serial.print("\tVoltage: ");
+              Serial.println(voltage);
+            
+              int redVal = 0;
+              int greenVal = 0;
+              int blueVal = 0;
+            
+              // Simple if-statement for temperature ranges
+              if (sensorValue < 800) {          // Hot
+                redVal = 255;                    // Full red
+                greenVal = 0;
+                blueVal = 0;
+              } else if (sensorValue < 850) {   // Warm
+                // map to scale green smoothly in this range
+                greenVal = map(sensorValue, 800, 849, 255, 0); // 800 -> 255, 849 -> 0
+                redVal = map(sensorValue, 800, 849, 0, 255);   // 800 -> 0, 849 -> 255
+                blueVal = 0;
+              } else {                          // Cold
+                blueVal = 255;                   // Full blue
+                redVal = 0;
+                greenVal = 0;
+              }
+            
+              // Set the LED colors
+              analogWrite(redPin, redVal);
+              analogWrite(greenPin, greenVal);
+              analogWrite(bluePin, blueVal);
+            
+              delay(50);
+            }
+        </code></pre>
+      </div>
+      <div class="section">
+        <h2>Questions & Answers</h2>
+      
+        <p><strong>1. In your voltage divider, can the variable resistor be either R1 or R2 or does it need to be one or the other? Justify your answer with example calculations.</strong><br>
+        In a voltage divider, the variable resistor can be either R1 (top resistor) or R2 (bottom resistor), but where you place it affects how the output voltage responds to changes in resistance. The voltage divide formula is V_out = V_in * R2 / R1 + R2. If we want to keep the resistance of R1 constant and vary R2, we can place R2 between the ground and the variable resistor and keep R1 constant. 
+        Example:
+        V_in = 5V
+        R1 = 1000 ohms
+        R2 = 1000 ohms
+        V_out = 5V * 1000 / 1000 + 1000 = 2.5V
+        If we place R2 between the ground and the variable resistor, the output voltage will be 2.5V when R2 is 1000 ohms.
+        If we place R1 between the ground and the variable resistor, the output voltage will be 2.5V when R1 is 1000 ohms.
+        </p>
+        <p><strong>2. Draw a graph where the x-axis is time and the y-axis is voltage. Plot the voltage at V-measure of your voltage divider of your shared gif.</strong><br>
+           I created a graph showing the voltage at V-measure of the LED Voltage divider. The graph shows the voltage dropping from 5v as the thermister heats up.</p>
+           <img src="A3-GRAPH.jpg" alt="Voltage vs Time Graph for the LED Voltage divider">
+
+        <p><strong>3. AnalogWrite and analogRead are respectively 8-bit and 10-bit values. Imagine you had 10-bit PWM and a 16-bit analog-to-digital converter instead. How would this change your map() code? Explain your answer.</strong><br>
+            Currently, analogRead() returns a 10-bit value from 0 to 1023 and analogWrite() takes an 8-bit value from 0 to 255, so the code maps 0–1023 to 0–255. With higher-resolution hardware, analogRead() would return values from 0 to 65535, and analogWrite() would accept values from 0 to 1023. Therefore, the map() function should scale the 16-bit input to the 10-bit output, for example using map(sensorValue, 0, 65535, 0, 1023)</p>
+      </div>
+
+    </div>
+  </body>
+</html>
