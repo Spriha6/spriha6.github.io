@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Spriha's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Spriha's Assignment 4!</h1>
+    <div class="header">
+      <div class="section">
+        
+      <figure>
+        <img src="A4-SCHEMATIC.jpg" alt="Schematic Diagram" />
+        <figcaption>Figure 1: Schematic Diagram of three LEDs attached to three resistors to blink independtly.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="A4-CIRCUIT.jpg" alt="Breadboard circuit" />
+        <figcaption>Figure 2: Breadboard setup of my LEDs. The LEDs blink independently as programmed.</figcaption>
+      </figure>
+      
+      <figure>
+        <img src="A4-MOTION SENSOR.gif" alt="LED blinking animation" />
+        <figcaption>Animated demonstration of the LED circuit in action.</figcaption>
+      </figure>
+      
+      <div class="section">
+        <p>Arduino code used to control the LEDs:</p>
+        <pre><code>
+            #include <Servo.h>      // Library to control the servo
+
+                Servo myServo;          // Create servo object
+                
+                const int PIR_PIN = 2;  // PIR motion sensor input
+                const int LED_PIN = 8;  
+                bool servoActive = false; // Track servo state
+                unsigned long lastMotionTime = 0;
+                const unsigned long ACTIVE_DURATION = 5000; // Servo active 5 seconds
+                
+                void setup() {
+                  pinMode(PIR_PIN, INPUT);   // PIR as digital input
+                  myServo.attach(9);         // Servo on pin 9
+                  myServo.write(0);          // Initial servo position
+                  Serial.begin(9600);        // Debugging
+                }
+                
+                void loop() {
+                  // Read the PIR sensor digital output
+                  int motion = digitalRead(PIR_PIN);
+                
+                  // Print the PIR reading to Serial Monitor for debugging
+                  Serial.println(motion);
+                
+                  // Optional: control the servo based on PIR
+                  if (motion == HIGH) {
+                    myServo.write(90);  // Move servo if motion detected
+                     digitalWrite(LED_PIN, HIGH); 
+                  } else {
+                    myServo.write(0);   // Return servo to rest
+                    digitalWrite(LED_PIN, LOW);
+                  }
+                
+                  delay(200);  // Small delay to make readings easier to see
+                }
+                
+                
+        </code></pre>
+      </div>
+      <div class="section">
+        <h2>Questions & Answers</h2>
+      
+        <p><strong>1. Say you are using a servo motor you attach to pin 9. In your loop() you have the following code:
+
+            void loop() {
+            for (pos = 0; pos <= 180; pos += 1) {
+              myservo.write(pos); 
+              delay(100); 
+              }
+            }
+            Draw a graph with the x-axis as time and the y-axis as voltage at pin 9 with respect to ground. </strong><br>
+           I created square-wave graphs for each LED showing voltage vs. time. Each LED line rises to ~2V when on and drops to 0V when off, staggered according to the delays in the Arduino code.</p>
+
+          <img src="A4-Q1.jpg" alt="Voltage vs Time Graph for the motion sensor and servo">
+        <p><strong>2. Your input device is slightly broken, leading it to give us an erroneous reading 1% of the time. How can we address this? Answer in (pseudo)code.</strong><br>
+           If the device gives an enormous readin 1% of the time, we get 5 readings and then find the frequesnt reading to set as value. Pseudo Code: 
+           <pre><code>
+            // FUNCTION getReading
+            // CREATE empty list called readings
+            // SET number_of_samples = 5
+        
+            // FOR i FROM 1 TO number_of_samples
+            //     reading = GET sensor reading
+            //     ADD reading TO readings
+            // END FOR LOOP
+        
+            // value = FIND most frequent value IN readings
+            // RETURN Value
+            // END FUNCTION
+                
+        </code></pre>
+        </p>
+      
+        <p><strong>3. Your input device is slightly noisy, leading the measurement to randomly deviate from the true measurement up or down by 10%. How can we address this? Answer in (pseudo)code.</strong><br>
+            If the device is noisy, leading to deviation is measurement by 10%, then we take 10 readings and then get an average of the readings to find a better value.Pseudo Code: 
+            <pre><code>
+            // FUNCTION getMeasurement
+            // CREATE empty list called readings
+            // SET number_of_samples = 10
+        
+            // FOR i FROM 1 TO number_of_samples
+            //     reading = GET sensor measurement
+            //     ADD reading TO readings
+            // END FOR
+        
+            //  value = CALCULATE average OF readings
+            //  RETURN value
+            // END FUNCTION
+
+        </code></pre>
+        </p>
+      
+        <p><strong>4. Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If you used an LLM, please 'share' your conversation and include it as part of your submission, or cite the prompt(s) you used and the output. If no, you can either leave this question blank, or provide other information if you'd like.</strong><br>
+            I used ChatGPT to find accurate schematic symbols for the servo and motion sensor, since the symbols I found online were inconsistent. I chose to use only one library, the “Servo” library, because the motion sensor does not require a library to function. To meet the specifications—which state that if only one library is used, the design must include more than one sensor and at least one actuator—I included both the servo motor and an LED as actuators, in addition to the motion sensor as the input. This ensures the design fully satisfies the requirements.
+        </p>
+      </div>
+
+    </div>
+  </body>
+</html>
