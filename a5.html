@@ -14,7 +14,7 @@
       <div class="section">
         
       <figure>
-        <img src="A4-SCHEMATIC.jpg" alt="Schematic Diagram" />
+        <img src="a5-schematic.jpg" alt="Schematic Diagram" />
         <figcaption>Figure 1: Schematic Diagram of three LEDs attached to three resistors to blink independtly.</figcaption>
       </figure>
 
@@ -81,47 +81,55 @@ void loop() {
         <p><strong>1. What is the absolute maximum amount of current between pins 2 and 3?
 
             Based on the datasheet for the DMT6009LCT MOSFET, it can safely handle a continuous drain current of 33.9 A at a gate voltage of 4.5 V, which is far higher than the typical current drawn by a small 12 V desk fan, usually around 0.5–1 A. This means the MOSFET can easily switch the fan on and off without risk of overheating or damage. Additionally, its low on-resistance of approximately 14.5 mΩ results in a negligible voltage drop across the MOSFET when the fan is operating, ensuring the fan receives nearly the full 12 V. Since the Arduino pin only drives the MOSFET gate with a very small current, the circuit is safe and well within the component limits, making the MOSFET an appropriate choice for controlling the fan in this setup.
-          <img src="A4-Q1.jpg" alt="Voltage vs Time Graph for the motion sensor and servo">
-        <p><strong>2. Your input device is slightly broken, leading it to give us an erroneous reading 1% of the time. How can we address this? Answer in (pseudo)code.</strong><br>
-           If the device gives an enormous readin 1% of the time, we get 5 readings and then find the frequesnt reading to set as value. Pseudo Code: 
-           <pre><code>
-            // FUNCTION getReading
-            // CREATE empty list called readings
-            // SET number_of_samples = 5
         
-            // FOR i FROM 1 TO number_of_samples
-            //     reading = GET sensor reading
-            //     ADD reading TO readings
-            // END FOR LOOP
-        
-            // value = FIND most frequent value IN readings
-            // RETURN Value
-            // END FUNCTION
-                
-        </code></pre>
+        <p><strong>2. Draw a schematic for a circuit with using at least your arduino, a DC motor, a flyback diode, and capacitors between power and ground. Find parts with datasheets you could use for each of these schematic components.</strong><br> 
+           <img src="a5-q1.jpg" alt="Schematic Diagram for the circuit wit a dc motor, flyback diode and capacitors">
         </p>
       
-        <p><strong>3. Your input device is slightly noisy, leading the measurement to randomly deviate from the true measurement up or down by 10%. How can we address this? Answer in (pseudo)code.</strong><br>
-            If the device is noisy, leading to deviation is measurement by 10%, then we take 10 readings and then get an average of the readings to find a better value. Pseudo Code: 
-            <pre><code>
-            // FUNCTION getMeasurement
-            // CREATE empty list called readings
-            // SET number_of_samples = 10
-        
-            // FOR i FROM 1 TO number_of_samples
-            //     reading = GET sensor measurement
-            //     ADD reading TO readings
-            // END FOR
-        
-            //  value = CALCULATE average OF readings
-            //  RETURN value
-            // END FUNCTION
-
-        </code></pre>
+        <p><strong>3. Draw a schematic using at least your arduino, this chip, and two motors. Write (pseudo) code that shows how you would move the motors both forward, both back, then one forward one back, and one back then forward.</strong><br>
+            <img src="a5-q2.jpeg" alt="schematic diagram on two motors and the chip">
         </p>
       
         <p><strong>4. Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If you used an LLM, please 'share' your conversation and include it as part of your submission, or cite the prompt(s) you used and the output. If no, you can either leave this question blank, or provide other information if you'd like.</strong><br>
-            I used ChatGPT to find accurate schematic symbols for the servo and motion sensor, since the symbols I found online were inconsistent. I chose to use only one library, the “Servo” library, because the motion sensor does not require a library to function. To meet the specifications—which state that if only one library is used, the design must include more than one sensor and at least one actuator—I included both the servo motor and an LED as actuators, in addition to the motion sensor as the input. This ensures the design fully satisfies the requirements.
+            / motor control pins
+Motor1_IN1 = Arduino pin 3
+Motor1_IN2 = Arduino pin 4
+Motor2_IN1 = Arduino pin 5
+Motor2_IN2 = Arduino pin 6
+
+// Setup
+Set all motor pins as OUTPUT
+
+// Main loop
+
+    // 1. Both motors forward
+    Set Motor1_IN1 HIGH
+    Set Motor1_IN2 LOW
+    Set Motor2_IN1 HIGH
+    Set Motor2_IN2 LOW
+    Wait 1 second
+
+    // 2. Both motors backward
+    Set Motor1_IN1 LOW
+    Set Motor1_IN2 HIGH
+    Set Motor2_IN1 LOW
+    Set Motor2_IN2 HIGH
+    Wait 1 second
+
+    // 3. Motor1 forward, Motor2 backward
+    Set Motor1_IN1 HIGH
+    Set Motor1_IN2 LOW
+    Set Motor2_IN1 LOW
+    Set Motor2_IN2 HIGH
+    Wait 1 second
+
+    // 4. Motor1 backward, Motor2 forward
+    Set Motor1_IN1 LOW
+    Set Motor1_IN2 HIGH
+    Set Motor2_IN1 HIGH
+    Set Motor2_IN2 LOW
+    Wait 1 second
+
         </p>
       </div>
 
