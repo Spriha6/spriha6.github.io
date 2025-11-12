@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Spriha's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Spriha's Assignment 6!</h1>
+    <div class="header">
+      <div class="section">
+        
+      <figure>
+        <img src="a5-schematic.jpg" alt="Schematic Diagram" />
+        <figcaption>Figure 1: Schematic Diagram of an automated fan using ultrasomic sensor.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="a5-circuit.jpg" alt="Breadboard Circuit" />
+        <figcaption>Figure 2: Breadboard setup an automated fan using ultrasomic sensor.</figcaption>
+      </figure>
+      
+      <figure>
+        <img src="a5 gif.gif" alt="The Fan working with the Ultrasonic Sensor" />
+        <figcaption>Animated demonstration.</figcaption>
+      </figure>
+      
+      <div class="section">
+        <p>Arduino code:</p>
+        <pre><code>
+const int trigPin = 3;
+const int echoPin = 2;
+const int fanPin = 5;      // PWM pin to MOSFET gate
+const float threshold = 50; // cm
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(fanPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Trigger the ultrasonic sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo pulse
+  long duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout
+
+  // Check if echo was detected
+  if (duration == 0) {
+    Serial.println("No echo detected");
+    analogWrite(fanPin, 0); // Turn fan OFF
+  } else {
+    float distance = duration * 0.017;
+    Serial.print("Distance (cm): ");
+    Serial.println(distance);
+
+    // Turn fan ON if object within threshold
+    if (distance <= threshold) {
+      analogWrite(fanPin, 255); // Full speed
+    } else {
+      analogWrite(fanPin, 0);   // Turn fan OFF
+    }
+  }
+
+  delay(200);
+}                
+        </code></pre>
+      </div>
+      <div class="section">
+        <h2>Questions & Answers</h2>
+      
+        <p><strong>1. What is the absolute maximum amount of current between pins 2 and 3?
+
+            Based on the datasheet for the DMT6009LCT MOSFET, it can safely handle a continuous drain current of 33.9 A at a gate voltage of 4.5 V, which is far higher than the typical current drawn by a small 12 V desk fan, usually around 0.5–1 A. This means the MOSFET can easily switch the fan on and off without risk of overheating or damage. Additionally, its low on-resistance of approximately 14.5 mΩ results in a negligible voltage drop across the MOSFET when the fan is operating, ensuring the fan receives nearly the full 12 V. Since the Arduino pin only drives the MOSFET gate with a very small current, the circuit is safe and well within the component limits, making the MOSFET an appropriate choice for controlling the fan in this setup.
+        
+        <p><strong>2. Draw a schematic for a circuit with using at least your arduino, a DC motor, a flyback diode, and capacitors between power and ground. Find parts with datasheets you could use for each of these schematic components.</strong><br> 
+           <img src="a5-q1.jpg" alt="Schematic Diagram for the circuit wit a dc motor, flyback diode and capacitors">
+        </p>
+      
+        <p><strong>3. Draw a schematic using at least your arduino, this chip, and two motors. Write (pseudo) code that shows how you would move the motors both forward, both back, then one forward one back, and one back then forward.</strong><br>
+            <img src="a5-q2.jpeg" alt="schematic diagram on two motors and the chip">
+        </p>
+      
+        <p><strong>4. Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If you used an LLM, please 'share' your conversation and include it as part of your submission, or cite the prompt(s) you used and the output. If no, you can either leave this question blank, or provide other information if you'd like.</strong><br>
+            / motor control pins
+Motor1_IN1 = Arduino pin 3
+Motor1_IN2 = Arduino pin 4
+Motor2_IN1 = Arduino pin 5
+Motor2_IN2 = Arduino pin 6
+
+// Setup
+Set all motor pins as OUTPUT
+
+// Main loop
+
+    // 1. Both motors forward
+    Set Motor1_IN1 HIGH
+    Set Motor1_IN2 LOW
+    Set Motor2_IN1 HIGH
+    Set Motor2_IN2 LOW
+    Wait 1 second
+
+    // 2. Both motors backward
+    Set Motor1_IN1 LOW
+    Set Motor1_IN2 HIGH
+    Set Motor2_IN1 LOW
+    Set Motor2_IN2 HIGH
+    Wait 1 second
+
+    // 3. Motor1 forward, Motor2 backward
+    Set Motor1_IN1 HIGH
+    Set Motor1_IN2 LOW
+    Set Motor2_IN1 LOW
+    Set Motor2_IN2 HIGH
+    Wait 1 second
+
+    // 4. Motor1 backward, Motor2 forward
+    Set Motor1_IN1 LOW
+    Set Motor1_IN2 HIGH
+    Set Motor2_IN1 HIGH
+    Set Motor2_IN2 LOW
+    Wait 1 second
+
+        </p>
+      </div>
+
+    </div>
+  </body>
+</html>

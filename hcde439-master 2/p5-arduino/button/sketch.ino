@@ -9,5 +9,5 @@ void setup()
 void loop()
 {
   Serial.println(digitalRead(BUTTON_PIN));
-  delay(50);
+  delay(100);
 }
