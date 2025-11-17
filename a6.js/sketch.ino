@@ -1,38 +1,35 @@
-const int redPin = 13;
-const int greenPin = 11;
-const int bluePin = 9;
+const int X_pin = A0;
+const int Y_pin = A1;
+
+const int R_pin = 9;
+const int G_pin = 10;
+const int B_pin = 11;
 
 void setup() {
+  pinMode(R_pin, OUTPUT);
+  pinMode(G_pin, OUTPUT);
+  pinMode(B_pin, OUTPUT);
   Serial.begin(9600);
-
-  pinMode(redPin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pinMode(bluePin, OUTPUT);
 }
 
 void loop() {
-  int xValue = analogRead(joyX);  
-  int yValue = analogRead(joyY);  
-  const int joyBtnPin = 2;
+  int xVal = analogRead(X_pin);
+  int yVal = analogRead(Y_pin);
 
-  // Joystick values to RGB range (0–255)
-  int redValue = map(xValue, 0, 1023, 0, 255);
-  int greenValue = map(yValue, 0, 1023, 0, 255);
+  int r = 0, g = 0, b = 0;
 
-  // Blue is complimentary mix of X & Y
-  int blueValue = 255 - ((redValue + greenValue) / 2);
+  if (xVal > 700) { r=255; g=0; b=0; }         // UP → RED
+  else if (xVal < 300) { r=255; g=255; b=0; }  // DOWN → YELLOW
+  else if (yVal > 700) { r=0; g=255; b=0; }    // RIGHT → GREEN
+  else if (yVal < 300) { r=0; g=0; b=255; }    // LEFT → BLUE
 
-  // LED pins
-  analogWrite(redPin, redValue);
-  analogWrite(greenPin, greenValue);
-  analogWrite(bluePin, blueValue);
+  analogWrite(R_pin,r);
+  analogWrite(G_pin,g);
+  analogWrite(B_pin,b);
 
- // Debugging 
- // Print values to Serial Monitor
-  Serial.print("X: ");
-  Serial.print(xValue);
-  Serial.print(" | Y: ");
-  Serial.println(yValue);
+  Serial.print(r); Serial.print(",");
+  Serial.print(g); Serial.print(",");
+  Serial.println(b);
 
   delay(100);
 }
