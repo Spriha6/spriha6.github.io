@@ -1,64 +1,67 @@
-let port;
-let writer;
-let joystickCenter, joystickPos;
-let joystickRadius = 80;
+const BAUD_RATE = 9600; 
+let port, connectBtn;
 let r = 0, g = 0, b = 0;
 
 function setup() {
-  createCanvas(400, 400);
-  joystickCenter = createVector(width / 2, height / 2);
-  joystickPos = joystickCenter.copy();
-
-  let connectBtn = createButton("Connect to Arduino");
-  connectBtn.position(120, 40);
-  connectBtn.mousePressed(connectToArduino);
-  textFont("system-ui", 16);
-  textStyle(BOLD);
+  createCanvas(windowWidth, windowHeight); // Full screen
+  setupSerial();
   textAlign(CENTER, CENTER);
-}
-
-async function connectToArduino() {
-  try {
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 9600 });
-    writer = port.writable.getWriter();
-    console.log("Connected to Arduino!");
-  } catch (err) {
-    console.error("Connection failed: ", err);
-  }
+  textSize(48);
+  noStroke();
 }
 
 function draw() {
-  background(245);
-  fill(0);
-  text("RGB Joystick Controller", width / 2, 90);
+  if (!checkPort()) return;
 
-  // Draw joystick base
-  fill(220);
-  stroke(150);
-  strokeWeight(3);
-  circle(joystickCenter.x, joystickCenter.y, joystickRadius * 2);
+  let str = port.readUntil("\n");
+  if (str.length == 0) return;
 
-  // Draw joystick knob
-  fill(100);
-  noStroke();
-  circle(joystickPos.x, joystickPos.y, 40);
+  let values = str.trim().split(",");
+  if (values.length === 3) {
+    [r, g, b] = values.map(Number);
+  }
 
-  // Calculate joystick position 
-  let x = (joystickPos.x - joystickCenter.x) / joystickRadius;
-  let y = (joystickCenter.y - joystickPos.y) / joystickRadius; // invert Y
+  // Set background to the RGB color
+  background(r, g, b);
 
-  // Map joystick to RGB
-  r = int(map(x, -1, 1, 0, 255));
-  g = int(map(y, -1, 1, 0, 255));
-  b = int(map(dist(joystickPos.x, joystickPos.y, joystickCenter.x, joystickCenter.y), 0, joystickRadius, 0, 255));
-  
-  r = constrain(r, 0, 255);
-  g = constrain(g, 0, 255);
-  b = constrain(b, 0, 255);
+  // Calculate brightness to choose text color for readability
+  let brightness = (r*0.299 + g*0.587 + b*0.114); 
+  fill(brightness > 150 ? 0 : 255); // black text on light colors, white on dark
 
-  // Display color preview
-  fill(r, g, b);
-  rect(width / 2 - 75, 320, 150, 50, 10);
-  fill(0);
+  // Show RGB values as text
+  text(`RGB: ${r}, ${g}, ${b}`, width / 2, height / 2);
+}
+
+// Serial setup function
+function setupSerial() {
+  port = createSerial();
+  let usedPorts = usedSerialPorts();
+  if (usedPorts.length > 0) port.open(usedPorts[0], BAUD_RATE);
+
+  connectBtn = createButton("Connect to Arduino");
+  connectBtn.position(10, 10);
+  connectBtn.mouseClicked(onConnectButtonClicked);
+}
+
+// Check if the port is open
+function checkPort() {
+  if (!port.opened()) {
+    connectBtn.html("Connect to Arduino");
+    background(100); 
+    return false;
+  } else {
+    connectBtn.html("Disconnect");
+    return true;
+  }
+}
+
+// Connect/disconnect button
+function onConnectButtonClicked() {
+  if (!port.opened()) port.open(BAUD_RATE);
+  else port.close();
+}
+
+// Make canvas responsive
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
