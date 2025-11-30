@@ -15,64 +15,47 @@
         
       <figure>
         <img src="a5-schematic.jpg" alt="Schematic Diagram" />
-        <figcaption>Figure 1: Schematic Diagram of an automated fan using ultrasomic sensor.</figcaption>
+        <figcaption>Figure 1: Schematic Diagram of an automated fan using ultrasonic sensor.</figcaption>
       </figure>
 
       <figure>
-        <img src="a5-circuit.jpg" alt="Breadboard Circuit" />
-        <figcaption>Figure 2: Breadboard setup an automated fan using ultrasomic sensor.</figcaption>
+        <img src="A5-new circuit.jpg" alt="Breadboard Circuit" />
+        <figcaption>Figure 2: Breadboard setup an automated fan using ultrasonic sensor.</figcaption>
       </figure>
       
       <figure>
-        <img src="a5 gif.gif" alt="The Fan working with the Ultrasonic Sensor" />
+        <img src="a5-new gif.gif" alt="The Fan working with the Ultrasonic Sensor" />
         <figcaption>Animated demonstration.</figcaption>
       </figure>
       
       <div class="section">
         <p>Arduino code:</p>
         <pre><code>
-const int trigPin = 3;
-const int echoPin = 2;
-const int fanPin = 5;      // PWM pin to MOSFET gate
-const float threshold = 50; // cm
+          #include <HCSR04.h>
 
-void setup() {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(fanPin, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  // Trigger the ultrasonic sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  // Read echo pulse
-  long duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout
-
-  // Check if echo was detected
-  if (duration == 0) {
-    Serial.println("No echo detected");
-    analogWrite(fanPin, 0); // Turn fan OFF
-  } else {
-    float distance = duration * 0.017;
-    Serial.print("Distance (cm): ");
-    Serial.println(distance);
-
-    // Turn fan ON if object within threshold
-    if (distance <= threshold) {
-      analogWrite(fanPin, 255); // Full speed
-    } else {
-      analogWrite(fanPin, 0);   // Turn fan OFF
-    }
-  }
-
-  delay(200);
-}                
+            UltraSonicDistanceSensor distanceSensor(13, 12);  // Initialize sensor that uses digital pins 13 and 12.
+            const int fanPin = 9;   
+            const float threshold = 10; // cm
+            
+            void setup () {
+              // We initialize serial connection so that we could print values from sensor.
+                Serial.begin(9600);  
+            }
+            
+            void loop () {
+                
+                float distance = distanceSensor.measureDistanceCm();
+                Serial.println(distance);
+            
+                // If the distance of the object is less than 10 cm, the fan will turn on
+                if (distance <= threshold) {
+                  analogWrite(fanPin, 255); 
+                } else {
+                  analogWrite(fanPin, 0);   
+                }
+            
+                delay(500);
+            }                
         </code></pre>
       </div>
       <div class="section">
