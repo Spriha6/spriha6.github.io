@@ -2,58 +2,116 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Dozy!</title>
+    <title>Dozy – Sleep Assistant Device</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
+
   <body>
-    <h1>Final Project Proposal!</h1>
+    <h1>Final Project Proposal: DOZY</h1>
+
     <div class="header">
-      <div class="section">
-        
       <figure>
-        <img src="Dozy.jpeg" alt="Final project diagram" />
-        <figcaption>Figure 1: Schematic of a temperature-controlled RGB LED circuit using a thermistor.</figcaption>
+        <img src="Dozy.jpeg" alt="Dozy device diagram" />
+        <figcaption>
+          Figure 1: Concept sketch for DOZY’s temperature-controlled fan and LCD screen feedback system.
+        </figcaption>
       </figure>
+    </div>
 
-      <div class="section">
-        <h1>Sleep Bedside Assistant Device</h1>
+    <div class="header">
+      <figure>
+        <img src="Dozy-Circuit.jpg" alt="Dozy Circuit" />
+        <figcaption>
+          Figure 2: The final DOZY circuit.
+        </figcaption>
+      </figure>
+    </div>
 
-  <div class="section">
-    <h2>Project Concept / Motivation</h2>
-    <p>
-      I want to build a sleep bedside automated device that helps improve sleep comfort. 
-      It will monitor the surrounding temperature and humidity and display this information on a LCD screen. 
-      If it gets too warm, a fan will automatically turn on to cool the space, 
-      while an RGB LED provides visual feedback of the current temperature.
-    </p>
-  </div>
+    <div class="section">
+      <h1>Sleep Bedside Assistant Device</h1>
+    </div>
 
-  <div class="section">
-    <h2>Anticipated Bill of Materials</h2>
-    <ul>
-      <li>Arduino Uno (x1)</li>
-      <li>DHT11 sensor (temperature + humidity)</li>
-      <li>16x2 LCD Display</li>
-      <li>RGB LED</li>
-      <li>DC Fan (5V or 12V)</li>
-      <li>Breadboard and assorted resistors</li>
-    </ul>
-  </div>
+    <div class="section">
+      <h2>Project Concept & Motivation</h2>
+      <p>
+        DOZY is a bedside sleep-assistant device designed to automatically adjust 
+        your environment for better sleep. It uses a DHT11 sensor to monitor
+        temperature and humidity, displays the information on a 16x2 LCD screen,
+        and activates a cooling fan when the room becomes too warm. An RGB LED
+        provides simple visual feedback based on comfort conditions.
+      </p>
+    </div>
 
-  <div class="section">
-    <h2>Timeline and Contingency Plans</h2>
-    <ul>
-      <li>Investigate optimal temperature and humidity ranges for healthy sleep.</li>
-      <li>Figure out how to connect the DHT sensor, fan, RGB LED, and LCD display.</li>
-      <li>Program the Arduino to read sensor inputs, display real-time temperature and humidity on the LCD, and provide automatic fan control and LED feedback.</li>
-      <li>Test individual components first (LCD, fan, LED) before integrating.</li>
-      <li>Build a desk stand or enclosure to hold the device securely and maintain proper airflow for the fan.</li>
-      <li>Test the final product.</li>
-    </ul>
-  </div>
+    <div class="section">
+      <h2>Anticipated Bill of Materials</h2>
+      <ul>
+        <li>Arduino Uno</li>
+        <li>DHT11 Sensor (temperature + humidity)</li>
+        <li>16x2 LCD Display</li>
+        <li>RGB LED</li>
+        <li>DC Fan (5V or 12V)</li>
+        <li>Breadboard & assorted resistors</li>
+      </ul>
+    </div>
 
-</body>
+    <div class="section">
+      <h2>Arduino Code</h2>
+      <p>Code used to read the sensor, update the LCD, and control the fan:</p>
+
+      <pre><code>
+#include &lt;DHT.h&gt;
+#include &lt;LiquidCrystal.h&gt;
+
+#define DHTPIN 7
+#define DHTTYPE DHT11
+#define FANPIN 9   
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  dht.begin();
+  pinMode(FANPIN, OUTPUT);
+}
+
+void loop() {
+  float tempC = dht.readTemperature();
+
+  lcd.clear();
+  if (isnan(tempC)) {
+    lcd.setCursor(0,0);
+    lcd.print("Sensor error");
+    digitalWrite(FANPIN, LOW); 
+  } else {
+    lcd.setCursor(0,0);
+    lcd.print("Temp: ");
+    lcd.print(tempC);
+    lcd.print((char)223);
+    lcd.print("C");
+
+    lcd.setCursor(0,1);
+
+    if (tempC < 18) {
+      lcd.print("Too cold for sleep");
+      digitalWrite(FANPIN, LOW);
+    } 
+    else if (tempC > 26) {
+      lcd.print("Too hot for sleep");
+      digitalWrite(FANPIN, HIGH);
+    } 
+    else {
+      lcd.print("Ideal for sleep");
+      digitalWrite(FANPIN, LOW);
+    }
+  }
+
+  delay(2000);
+}
+      </code></pre>
+    </div>
+  </body>
 </html>
